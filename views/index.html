@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>sql-edit</title>
+  <link href="js/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="js/codemirror/theme/my-edit.css" rel="stylesheet" type="text/css">
+  <link href="js/codemirror/addon/hint/show-hint.css" rel="stylesheet" type="text/css">
+  <link href="js/codemirror/addon/scroll/simplescrollbars.css" rel="stylesheet" type="text/css">
+  <link href="js/codemirror/addon/display/fullscreen.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="js/codemirror/addon/fold/foldgutter.css"/>
+</head>
+<body>
+<div class="container">
+  <textarea id="codeMirrorEdit"></textarea>
+  <!--<button id="btn">获取值</button>-->
+  <!--<div class="result" id="result"></div>-->
+</div>
+<script type="text/javascript" src="js/jquery.1.11.min.js"></script>
+<!-- 引入CodeMirror核心文件 -->
+<script type="text/javascript" src="js/codemirror/lib/CodeMirror.js"></script>
+<!-- SQL模式 -->
+<script type="text/javascript" src="js/codemirror/mode/sql/sql.js"></script>
+<script type="text/javascript" src="js/codemirror/mode/javascript/javascript.js"></script>
+<!--<script type="text/javascript" src="js/codemirror/mode/xml/xml.js"></script>-->
+<!-- 关键字自动提示 -->
+<script type="text/javascript" src="js/codemirror/addon/hint/show-hint.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/hint/sql-hint.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/hint/javascript-hint.js"></script>
+
+<!--当前行高亮、括号匹配、全屏插件、注释、placeholder、CodeMirror滚动条样式、绑定VIM-->
+<script type="text/javascript" src="js/codemirror/addon/selection/active-line.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/edit/matchbrackets.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/display/fullscreen.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/comment/comment.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/display/placeholder.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/scroll/simplescrollbars.js"></script>
+<script type="text/javascript" src="js/codemirror/keymap/vim.js"></script>
+
+<!--支持代码折叠-->
+<script type="text/javascript" src="js/codemirror/addon/fold/foldcode.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/fold/foldgutter.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/fold/brace-fold.js"></script>
+<script type="text/javascript" src="js/codemirror/addon/fold/comment-fold.js"></script>
+<!--支持代码格式化-->
+<script type="text/javascript" src="js/codemirror/addon/formatting/formatting.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>
