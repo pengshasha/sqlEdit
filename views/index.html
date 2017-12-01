@@ -44,6 +44,10 @@
 <script type="text/javascript" src="js/codemirror/addon/fold/comment-fold.js"></script>
 <!--支持代码格式化-->
 <script type="text/javascript" src="js/codemirror/addon/formatting/formatting.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/sql-edit.js"></script>
+<script>
+    var editor = $('#codeMirrorEdit').sqlEdit();
+    editor.sqlAddKeyWords('text/x-mysql','pengshasha saas bass');
+</script>
 </body>
 </html>
