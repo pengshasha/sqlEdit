@@ -1,4 +1,8 @@
+// import methods from "./codemirror/src/edit/methods";
+
 (function ($, CM) {
+    var DATA_TAG = 'codeMirror',
+        DATA_VAL = 'dataValue';
     var keyMaps = {
         "'a'": _completeAfter,
         "'b'": _completeAfter,
@@ -53,8 +57,9 @@
         "Ctrl-F7": function(cm) {
         }
     };
-
     var defaults = {
+        class: 'mySql', //命名空间
+        // value: 'select * form aa' ,
         mode: 'text/x-mysql',
         indentWithTabs: true,
         smartIndent: true,
@@ -80,14 +85,76 @@
             }
         }
     };
+    var methods = {
+        init:function(oDom, params, data) {
+        return methods.start(oDom, params, data);
+    },
+        start: function (dom, options, data) {
+            var $wrap = $("<div class='edit_warp'></div>");
+            var  na = options.class;
+            if(!!na){
+                $wrap.attr({
+                    id: [na, 'edit_wrap'].join('_'),
+                    'class': na
+                });
+            }
+            $wrap.data(DATA_TAG, options);
+            $wrap.data(DATA_VAL, data);
+            dom.wrap($wrap);
+            var $wrapDom = dom.parent();
+            return methods.createMirror($wrapDom);
+        },
+        createMirror: function ($wrapDom) {
+            var mirrorParams = {},
+                mirrorValue = '';
+            if($.isPlainObject($wrapDom.data(DATA_TAG))) mirrorParams = $wrapDom.data(DATA_TAG);
+            if(!!$wrapDom.data(DATA_VAL)) mirrorValue = $wrapDom.data(DATA_VAL);
+            var editor = _codeMirror($wrapDom.find('textarea')[0], mirrorParams);
+            editor.setSize('100%', 350);//设置编辑器的默认尺寸为350
+            editor.refresh();//动态设置或浏览器变动后保证editor的正确显示
+            if(!!mirrorValue) {
+                setTimeout(function () {
+                    methods.setInitValue(editor, mirrorValue);
+                },0)
 
-    function init(oDom, params){
-        var editor = _codeMirror(oDom, params);
-        editor.setSize('100%', 350);//设置编辑器的默认尺寸为350
-        editor.refresh();//动态设置或浏览器变动后保证editor的正确显示
-        editor.setValue(window.localStorage.getItem('sqlEditSave') || '');
-        return editor;
-    }
+                // setTimeout(function () {
+                //     destroy($wrapDom.find('textarea'));
+                // },2000)
+            }
+            return editor;
+
+        },
+        setInitValue: function (editor, data) {
+            if(!!data) {
+                editor.setValue(data);
+                var ch = editor.getLine(editor.lineCount()-1).length;
+                editor.autoFormatRange({line:0,ch:0},{line:editor.lineCount()-1,ch:ch});
+                editor.setCursor({line:editor.lineCount()-1,ch:ch});
+            }
+        },
+        destroy: function (dom) {
+            var $dom = dom;
+            var $wrapDom = $dom.parent('div');
+            $.isPlainObject($wrapDom.data(DATA_TAG)) && $wrapDom.data(DATA_TAG, null);
+            $.isPlainObject($wrapDom.data(DATA_VAL)) && $wrapDom.data(DATA_VAL, '');
+            console.log($wrapDom.html());
+            $wrapDom.replaceWith($dom.css('display','block'));
+        }
+    };
+
+    // function init2(oDom, params, data){
+    //     console.log(oDom);
+    //     var editor = _codeMirror(oDom[0], params);
+    //     if(!!data) {
+    //         editor.setValue(data);
+    //         var ch = editor.getLine(editor.lineCount()-1).length;
+    //         editor.autoFormatRange({line:0,ch:0},{line:editor.lineCount()-1,ch:ch});
+    //         editor.setCursor({line:editor.lineCount()-1,ch:ch});
+    //     }
+    //     editor.setSize('100%', 350);//设置编辑器的默认尺寸为350
+    //     editor.refresh();//动态设置或浏览器变动后保证editor的正确显示
+    //     return editor;
+    // }
 
     function _codeMirror(oDom, params) {
         return CM.fromTextArea(oDom, params)
@@ -172,14 +239,24 @@
             }
         }
     }
-    CM.defineExtension('sqlAddKeyWords', _sqlAddKeyWords);
+    CM.defineExtension('sqlAddKeyWords', _sqlAddKeyWords);//添加全局关键词
+
     var util = {
+        isString: function (str) {
+            return Object.prototype.toString.call(str) === "[object String]";
+        },
         isObject: function (obj) {
             return Object.prototype.toString.call(obj) === "[object Object]";
         }
     };
-    $.fn.sqlEdit = function (options) {
+    $.fn.sqlEdit = function (method, options) {
+        if((arguments.length == 1) && !!method && util.isObject(method)){
+            options = method;
+            method = '';
+        }
+        var toMethod = (!!method && util.isString(method)) ? method : 'init';
         var opts = options && util.isObject(options) ? $.extend({}, defaults, options) : defaults;
-        return init.call(null, this[0], opts);
+        data = !!options && !!options.data ? data : '';
+        return methods[toMethod].call(null, this, opts, data);
     };
 })(window.jQuery, CodeMirror);

@@ -21,12 +21,34 @@
   };
   var Pos = CodeMirror.Pos, cmpPos = CodeMirror.cmpPos;
 
+  function isEmptyObject(obj) {
+    for (var key in obj) {
+      return false;
+    }
+    return true;
+  }
+
   function isArray(val) { return Object.prototype.toString.call(val) == "[object Array]" }
 
   function getKeywords(editor) {
     var mode = editor.doc.modeOption;
     if (mode === "sql") mode = "text/x-sql";
-    return CodeMirror.resolveMode(mode).keywords;
+    var keywords = CodeMirror.resolveMode(mode).keywords;
+    var copyKeywords = copyObj(keywords);
+// 添加私有关键字
+    if(!isEmptyObject(editor.privateKeywords)) {
+      for(var i in editor.privateKeywords) {
+        copyKeywords[i]=editor.privateKeywords[i];
+      }
+    }
+    function copyObj(obj) {
+      var copyKeywords = {};
+      for(var i in obj) {
+        copyKeywords[i]=obj[i];
+      }
+      return copyKeywords;
+    }
+    return copyKeywords;
   }
 
   function getIdentifierQuote(editor) {
@@ -93,12 +115,12 @@
   }
 
   function cleanName(name) {
-    // Get rid name from identifierQuote and preceding dot(.)
+// Get rid name from identifierQuote and preceding dot(.)
     if (name.charAt(0) == ".") {
       name = name.substr(1);
     }
-    // replace doublicated identifierQuotes with single identifierQuotes
-    // and remove single identifierQuotes
+// replace doublicated identifierQuotes with single identifierQuotes
+// and remove single identifierQuotes
     var nameParts = name.split(identifierQuote+identifierQuote);
     for (var i = 0; i < nameParts.length; i++)
       nameParts[i] = nameParts[i].replace(new RegExp(identifierQuote,"g"), "");
@@ -120,7 +142,7 @@
   }
 
   function nameCompletion(cur, token, result, editor) {
-    // Try to complete table, column names and return start position of completion
+// Try to complete table, column names and return start position of completion
     var useIdentifierQuotes = false;
     var nameParts = [];
     var start = token.start;
@@ -139,24 +161,24 @@
       }
     }
 
-    // Try to complete table names
+// Try to complete table names
     var string = nameParts.join(".");
     addMatches(result, string, tables, function(w) {
       return useIdentifierQuotes ? insertIdentifierQuotes(w) : w;
     });
 
-    // Try to complete columns from defaultTable
+// Try to complete columns from defaultTable
     addMatches(result, string, defaultTable, function(w) {
       return useIdentifierQuotes ? insertIdentifierQuotes(w) : w;
     });
 
-    // Try to complete columns
+// Try to complete columns
     string = nameParts.pop();
     var table = nameParts.join(".");
 
     var alias = false;
     var aliasTable = table;
-    // Check if table is available. If not, find table by Alias
+// Check if table is available. If not, find table by Alias
     if (!getTable(table)) {
       var oldTable = table;
       table = findTableByAlias(table, editor);
@@ -202,7 +224,7 @@
       end: Pos(editor.lastLine(), editor.getLineHandle(editor.lastLine()).length)
     };
 
-    //add separator
+//add separator
     var indexOfSeparator = fullQuery.indexOf(CONS.QUERY_DIV);
     while(indexOfSeparator != -1) {
       separator.push(doc.posFromIndex(indexOfSeparator));
@@ -211,7 +233,7 @@
     separator.unshift(Pos(0, 0));
     separator.push(Pos(editor.lastLine(), editor.getLineHandle(editor.lastLine()).text.length));
 
-    //find valid range
+//find valid range
     var prevItem = null;
     var current = editor.getCursor()
     for (var i = 0; i < separator.length; i++) {

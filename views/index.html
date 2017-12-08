@@ -9,12 +9,20 @@
   <link href="js/codemirror/addon/scroll/simplescrollbars.css" rel="stylesheet" type="text/css">
   <link href="js/codemirror/addon/display/fullscreen.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="js/codemirror/addon/fold/foldgutter.css"/>
+  <style>
+    .CodeMirror{
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
 <div class="container">
   <textarea id="codeMirrorEdit"></textarea>
-  <!--<button id="btn">获取值</button>-->
-  <!--<div class="result" id="result"></div>-->
+  <textarea id="codeMirrorEdit2"></textarea>
+  <!--<textarea id="codeMirrorEdit3"></textarea>-->
+  <button id="btn">获取值</button>
+  <button id="destroy">销毁</button>
+  <div class="result" id="result"></div>
 </div>
 <script type="text/javascript" src="js/jquery.1.11.min.js"></script>
 <!-- 引入CodeMirror核心文件 -->
@@ -46,8 +54,21 @@
 <script type="text/javascript" src="js/codemirror/addon/formatting/formatting.js"></script>
 <script type="text/javascript" src="js/sql-edit.js"></script>
 <script>
-    var editor = $('#codeMirrorEdit').sqlEdit();
-    editor.sqlAddKeyWords('text/x-mysql','pengshasha saas bass');
+    var data = 'SELECT * FROM tableb WHERE id IN (SELECT id FROM table1 WHERE id IN (SELECT id FROM table2))ORDER BY shapeng';
+    var editor = $('#codeMirrorEdit').sqlEdit({data:data});
+    var editor2 = $('#codeMirrorEdit2').sqlEdit({class:'zz'});
+    editor.sqlAddKeyWords('bass');
+    editor.addPrivateKeywords('aep shapeng');
+    editor2.addPrivateKeywords('saas');
+    $('#btn').on('click',function () {
+        var value = editor.getValue();
+        $('#result').html(value);
+    })
+    $('#destroy').on('click',function () {
+        $('#codeMirrorEdit2').sqlEdit('destroy');
+    })
 </script>
+
+
 </body>
 </html>

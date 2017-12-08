@@ -138,6 +138,8 @@
     }
 
     function autoIndentRange(cm) {
+        cm.getLine(cm.lineCount())
+        CM.countColumn(cm.getLine(cm.lineCount()),cm.getLine(cm.lineCount()).length,3)
         var totalLines = cm.lineCount();
         cm.autoIndentRange({line:0, ch:0}, {line:totalLines});
     }

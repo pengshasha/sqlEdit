@@ -14,7 +14,7 @@
 })(function(CodeMirror) {
   "use strict";
 
-  CodeMirror.defineMode("sql", function(config, parserConfig) {
+  CodeMirror.defineMode("sql", function(config, parserConfig, privateKeywords) {
     "use strict";
 
     var client         = parserConfig.client || {},
@@ -24,7 +24,8 @@
       operatorChars  = parserConfig.operatorChars || /^[*+\-%<>!=&|~^]/,
       support        = parserConfig.support || {},
       hooks          = parserConfig.hooks || {},
-      dateSQL        = parserConfig.dateSQL || {"date" : true, "time" : true, "timestamp" : true};
+      dateSQL        = parserConfig.dateSQL || {"date" : true, "time" : true, "timestamp" : true},
+      privateKeywords= privateKeywords;//私有关键字
 
     function tokenBase(stream, state) {
       var ch = stream.next();
@@ -115,6 +116,7 @@
         if (builtin.hasOwnProperty(word)) return "builtin";
         if (keywords.hasOwnProperty(word)) return "keyword";
         if (client.hasOwnProperty(word)) return "string-2";
+        if (privateKeywords.hasOwnProperty(word)) return "keyword";
         return null;
       }
     }

@@ -37,7 +37,7 @@
 .cm-s-my-edit span.cm-variable-2 { color: #a074c4; }
 .cm-s-my-edit span.cm-def { color: #55b5db; }
 .cm-s-my-edit span.cm-operator { color: #9fb96e; }
-.cm-s-my-edit span.cm-keyword { color: #f00; }
+.cm-s-my-edit span.cm-keyword { color: #f00; text-transform: uppercase; }
 .cm-s-my-edit span.cm-atom { color: #a074c4; }
 .cm-s-my-edit span.cm-meta { color: #96c0d8; }
 .cm-s-my-edit span.cm-tag { color: #96c0d8; }
